@@ -53,3 +53,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             return a
         except:
             return "Был(а) давно"
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        pass

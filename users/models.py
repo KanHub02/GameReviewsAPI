@@ -23,4 +23,10 @@ class User(models.Model):
         verbose_name_plural = "Пользователи"
 
 
+
+class UserLibrary(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    game = models.ManyToManyField("media_api.Game")
+
+
 # Create your models here.
