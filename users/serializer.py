@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, UserLibrary, UserContacts
 from .services import LastActivity
 import datetime
 
@@ -30,26 +30,43 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         models = User
         fields = ["email", "username", "password", "password2"]
 
-    def get_last_activity(self, instance):
-        try:
-            now = datetime.utcnow()
-            last_seen = now - instance.last_active
-            if 30 >= last_seen.days > 0:
-                a = get_correct_str_time_ru(last_seen.days, "d")
-            elif last_seen.days > 30:
-                return "Был(а) давно"
-            else:
-                if last_seen.seconds // 3600 > 0:
-                    a = get_correct_str_time_ru(last_seen.seconds // 3600, "h")
-                elif last_seen.seconds // 60 % 60:
-                    a = get_correct_str_time_ru(last_seen.seconds // 60 % 60, "m")
-                else:
-                    a = get_correct_str_time_ru(last_seen.seconds % 60, "s")
-            return a
-        except:
-            return "Был(а) давно"
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=30)
+    password = serializers.CharField(max_length=40)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=30)
+    email = serializers.EmailField()
+    image = serializers.ImageField()
+    telegram_account = serializers.CharField()
+    first_name = serializers.CharField(max_length=50)
+    last_name = serializers.CharField(max_length=80)
+    status = serializers.CharField(max_length=100)
+    get_follows_count = serializers.SerializerMethodField(
+        method_name="get_follows_count", read_only=True
+    )
+    get_followers_count = serializers.SerializerMethodField(
+        method_name="get_followers_count", read_only=True
+    )
+
+    def get_follows_count(self, obj):
+        return UserContacts.objects.filter(user_to=obj).count()
+
+    def get_followers_count(self, obj):
+        return UserContacts.objects.filter(user_from=obj).count()
+
     class Meta:
-        pass
+        model = User
+        fields = [
+            "username",
+            "email",
+            "image",
+            "telegram_account",
+            "first_name",
+            "last_name",
+            "get_follows_count",
+            "get_followers_count",
+            "status",
+        ]

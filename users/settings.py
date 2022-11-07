@@ -15,3 +15,15 @@ favorite_genre = (
     ("Adventure", "Adventure"),
     ("Sport", "Sport"),
 )
+
+
+telegram_validator = r"^@[a-zA-Z0-9]+$"
+
+
+status_choices = (
+    ("Sleeping", "Sleeping"),
+    ("Playing", "Playing"),
+    ("Working", "Working"),
+    ("Studing", "Studing"),
+    ("Bored", "Bored"),
+)

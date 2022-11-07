@@ -1,17 +1,23 @@
 from django.db import models
 from .managers import UserBaseManager
+from .settings import telegram_validator, status_choices
 
 
 class User(models.Model):
     username = models.CharField(max_length=30, unique=True)
     email = models.EmailField(unique=True)
-
     image = models.ImageField(upload_to="media", default="media/default/avatar.png")
-
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_private = models.BooleanField(default=False)
+    status = models.CharField(choices=[status_choices], max_length=100, default=0.0)
+    # Profile fields
+    telegram_account = models.CharField(
+        validators=[telegram_validator], null=True, blank=True, max_length=100
+    )
+    first_name = models.CharField(max_length=50, null=True, blank=True)
+    last_name = models.CharField(max_length=80, null=True, blank=True)
 
     objects = UserBaseManager()
 
