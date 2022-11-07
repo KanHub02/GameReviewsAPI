@@ -32,6 +32,11 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = "users.User"
 # Application definition
 
+APPS = [
+    "media_api",
+    "users",
+]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,9 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
-    "media_api",
-    "users",
-]
+] + APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
