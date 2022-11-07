@@ -6,5 +6,4 @@ admin.site.register(Game)
 admin.site.register(Rating)
 admin.site.register(Tag)
 admin.site.register(Publisher)
-
 # Register your models here.

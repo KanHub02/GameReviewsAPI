@@ -19,7 +19,7 @@ class GameQuerySet(models.QuerySet):
 
     def tag_adventure(self):
         return self.filter(tag__name="adventure")
-    
+
     def tag_moba(self):
         return self.filter(tag__name="moba")
 
@@ -44,4 +44,4 @@ class GameManager(models.Manager):
         return get_queryset().tag_adventure()
 
     def tag_moba(self):
-        return get_querysey().tag_moba()
+        return get_queryset().tag_moba()
