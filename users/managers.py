@@ -30,4 +30,3 @@ class UserLibraryManager(models.Manager):
         if request.user.is_authenticatd:
             UserLibrary.objects.filter(user=request.user)
             pass
-        
