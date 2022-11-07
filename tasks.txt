@@ -1,0 +1,5 @@
+1.Recomendation - create user favorite games and create view using recomendation array
+2.User contact service(followers, friends)
+3.Chat
+4.Card payment
+5.Push
