@@ -68,10 +68,6 @@ class Game(models.Model):
     def __str__(self):
         return self.title
 
-    @property
-    def get_avg_rating(self):
-        return self.objects.annotate(Avg("rating"))
-
     class Meta:
         verbose_name = "Игры"
         verbose_name_plural = "Игра"

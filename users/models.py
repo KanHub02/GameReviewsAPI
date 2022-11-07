@@ -70,12 +70,25 @@ class UserContacts(models.Model):
         verbose_name_plural = "Контакты"
         constraints = [
             models.CheckConstraint(
-                check=~models.Q(
-                    user_from=models.F("user_to")
-                ),  # Prohibits subscribing to yourself
+                check=~models.Q(user_from=models.F("user_to")),
                 name="User cant follow to self",
             )
         ]
+
+
+class Team(models.Model):
+    title = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="media/team/upload_to/")
+    captain = models.OneToOneField(User, on_delete=models.CASCADE)
+    members = models.ManyToManyField(User)
+    rating = models.IntegerField()
+
+    def __str__(self):
+        return f"Капитан-{self.captain} Команда-{self.title}"
+
+    class Meta:
+        verbose_name = "Команда"
+        verbose_name_plural = "Команды"
 
 
 # Create your models here.
