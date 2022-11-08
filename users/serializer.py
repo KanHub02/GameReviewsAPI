@@ -10,14 +10,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     username = serializers.CharField(max_length=30)
     password = serializers.CharField(max_length=40, min_length=8)
-    password2 = serializers.CharField(max_length=40, min_length=8)
-    get_last_activity = serializers.SerializerMethodField(read_only=True)
 
-    def validate(self, attrs):
-        if attrs["password2"] != attrs["password"]:
-            raise serializers.ValidationError("Passwords didn't match")
 
-        return attrs
+    class Meta:
+        model = User
+        fields = ["email", "username", "password"]
+
 
     def create(self, validated_data):
         return User.objects.create_user(
@@ -25,10 +23,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             email=validated_data["email"],
             password=validated_data["password"],
         )
-
-    class Meta:
-        models = User
-        fields = ["email", "username", "password", "password2"]
 
 
 class LoginSerializer(serializers.Serializer):

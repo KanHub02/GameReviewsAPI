@@ -1,4 +1,4 @@
-from contacts.serializers import (
+from users.contacts.serializers import (
     FollowerSystemSerializer,
     UnFollowByCurrentUserSerializer,
     GetAllFollowersSerializer,

@@ -16,8 +16,11 @@ favorite_genre = (
     ("Sport", "Sport"),
 )
 
+from django.core.validators import RegexValidator
 
-telegram_validator = r"^@[a-zA-Z0-9]+$"
+telegram_validator = RegexValidator(
+    regex=r"^@[a-zA-Z0-9]+$", message="The telegram username was '@XXXXXXXX'"
+)
 
 
 status_choices = (

@@ -5,5 +5,7 @@ class IsAnonymous(BasePermission):
     message = "Please log out to register new account"
 
     def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return False
+        if not request.user.is_authenticated:
+            return True
+
+        return False

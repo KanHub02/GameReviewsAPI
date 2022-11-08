@@ -21,6 +21,6 @@ from rest_framework_simplejwt.views import TokenVerifyView
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("media_api.urls")),
-    path("auth", include("users.urls")),
+    path("auth/", include("users.urls")),
     path("auth/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
 ]

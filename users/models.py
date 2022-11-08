@@ -1,9 +1,10 @@
 from django.db import models
 from .managers import UserBaseManager
 from .settings import telegram_validator, status_choices
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 
-class User(models.Model):
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     email = models.EmailField(unique=True)
     image = models.ImageField(upload_to="media", default="media/default/avatar.png")
@@ -11,7 +12,7 @@ class User(models.Model):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_private = models.BooleanField(default=False)
-    status = models.CharField(choices=[status_choices], max_length=100, default=0.0)
+    # status = models.CharField(choices=[status_choices], max_length=100, null=True, blank=True)
     # Profile fields
     telegram_account = models.CharField(
         validators=[telegram_validator], null=True, blank=True, max_length=100
@@ -22,7 +23,7 @@ class User(models.Model):
     objects = UserBaseManager()
 
     USERNAME_FIELD = "username"
-    USERNAME_FIELD = ["email"]
+    REQUIRED_FIELDS = ["email"]
 
     class Meta:
         verbose_name = "Пользователь"
@@ -32,9 +33,7 @@ class User(models.Model):
 class UserLibrary(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     game = models.ManyToManyField("media_api.Game")
-    comment = models.TextField(
-        related_name="current_user_review", null=True, blank=True
-    )
+    comment = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user} библиотека"
@@ -79,7 +78,9 @@ class UserContacts(models.Model):
 class Team(models.Model):
     title = models.CharField(max_length=50)
     image = models.ImageField(upload_to="media/team/upload_to/")
-    captain = models.OneToOneField(User, on_delete=models.CASCADE)
+    captain = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="team_captain"
+    )
     members = models.ManyToManyField(User)
     rating = models.IntegerField()
 
