@@ -4,6 +4,18 @@ from .settings import telegram_validator, status_choices
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 
+class Ip(models.Model):
+    ip = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.ip
+
+    class Meta:
+        verbose_name = "Айпи адрес просмотра"
+        verbose_name_plural = "Айпи адреса просмотров"
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
     email = models.EmailField(unique=True)
@@ -24,6 +36,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email"]
+
+    views = models.ManyToManyField("self")
 
     class Meta:
         verbose_name = "Пользователь"
