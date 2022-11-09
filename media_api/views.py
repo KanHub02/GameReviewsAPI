@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status, response, views
-from media_api.serializers.serializers import GameSerializer, PublisherSerializer
+from media_api.serializers.serializers import GameSerializer, PublisherSerializer, GameDetailSerializer
 from .models import Game, Publisher, Tag, Rating
 from users.models import Ip
 from users.services import Viewer
+from .tasks import get_view
 
 
 class GameListView(generics.ListAPIView):
@@ -13,21 +14,15 @@ class GameListView(generics.ListAPIView):
 
 
 class GameDetailView(views.APIView):
-    serializer_class = GameSerializer
+    serializer_class = GameDetailSerializer
 
     def get(self, request, pk, *args, **kwargs):
-        post = get_object_or_404(Game, pk=pk)
+        instance = get_object_or_404(Game, pk=pk)
+        serializer = self.serializer_class(instance, many=False).data
         ip = Viewer.get_client_ip(request)
-        serializer = self.serializer_class(post, many=False).data
-
-        if Ip.objects.filter(ip=ip).exists():
-            post.views.add(Ip.objects.get(ip=ip))
-        else:
-            Ip.objects.create(ip=ip)
-            post.views.add(Ip.objects.get(ip=ip))
+        get_view(instance, ip)
 
         return response.Response(data=serializer, status=status.HTTP_200_OK)
-
 
 
 class MobaTagListView(views.APIView):

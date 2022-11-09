@@ -61,6 +61,7 @@ class Game(models.Model):
     born_date = models.DateField()
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    views = models.ManyToManyField("users.Ip", blank=True)
 
     # objects = GameQuerySet()
     # tag_manager = GameManager()
