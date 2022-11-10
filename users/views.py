@@ -1,10 +1,24 @@
-from rest_framework.generics import CreateAPIView
-from .serializer import UserRegisterSerializer, LoginSerializer
-from rest_framework import status, views, response
+from rest_framework.generics import CreateAPIView, UpdateAPIView
+from .serializer import UserRegisterSerializer, LoginSerializer, ProfileUpdateSerializer, ProfileSerializer
+from rest_framework import status, views, response, viewsets
 from .models import User
-from .permissions import IsAnonymous
+from .permissions import IsAnonymous, UserEquelProfile
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
+class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class =  ProfileSerializer
+    authentication_classes = [JWTAuthentication]
+
+
+class ProfileUpdateView(UpdateAPIView):
+    serializer_class = ProfileUpdateSerializer
+    permission_classes = [UserEquelProfile]
+    authentication_classes = [JWTAuthentication]
+    queryset = User.objects.all()
 
 
 class UserRegisterView(views.APIView):

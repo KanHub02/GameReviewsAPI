@@ -95,7 +95,7 @@ class Team(models.Model):
     captain = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="team_captain"
     )
-    members = models.ManyToManyField(User)
+    members = models.ManyToManyField(User, related_name="team_member")
     rating = models.IntegerField()
 
     def __str__(self):

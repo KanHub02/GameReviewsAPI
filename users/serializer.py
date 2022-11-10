@@ -28,27 +28,14 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=40)
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=30)
-    email = serializers.EmailField()
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=30, read_only=True)
+    email = serializers.EmailField(read_only=True)
     image = serializers.ImageField()
     telegram_account = serializers.CharField()
     first_name = serializers.CharField(max_length=50)
     last_name = serializers.CharField(max_length=80)
     status = serializers.CharField(max_length=100)
-    get_follows_count = serializers.SerializerMethodField(
-        method_name="get_follows_count", read_only=True
-    )
-    get_followers_count = serializers.SerializerMethodField(
-        method_name="get_followers_count", read_only=True
-    )
-
-    def get_follows_count(self, obj):
-        return UserContacts.objects.filter(user_to=obj).count()
-
-    def get_followers_count(self, obj):
-        return UserContacts.objects.filter(user_from=obj).count()
-
     class Meta:
         model = User
         fields = [
@@ -58,7 +45,16 @@ class ProfileSerializer(serializers.ModelSerializer):
             "telegram_account",
             "first_name",
             "last_name",
-            "get_follows_count",
-            "get_followers_count",
             "status",
         ]
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    contacts_count = serializers.SerializerMethodField(read_only=True, method_name="contacts_count")
+    class Meta:
+        model = User
+        exclude = ["is_superuser", "is_staff", "is_active", "is_private", "password"]
+
+    
+    def contacts_count(self, instance):
+        return UserContacts.objects.filter(to_set=instance).count()
